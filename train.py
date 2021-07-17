@@ -12,9 +12,9 @@ from machine_comprehension.dataset.squad_dataset import SquadDataset
 from machine_comprehension.models.loss import MyNLLLoss
 from machine_comprehension.utils.load_config import init_logging, read_config
 from machine_comprehension.utils.eval import eval_on_model
-from utils import get_input_size, get_embeddings_path, load_embeddings
+from .utils import get_input_size, get_embeddings_path, load_embeddings
 from tqdm import tqdm
-from model import MatchLSTMModified
+from .model import MatchLSTMModified
 logger = logging.getLogger(__name__)
 
 
