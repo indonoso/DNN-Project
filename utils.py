@@ -1,6 +1,7 @@
 import pickle
 from torch import Tensor
 
+
 def get_input_size(kind, config):
     network_input_size = 0
     if config[f'use_{kind}']:

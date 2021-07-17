@@ -43,7 +43,7 @@ def train(config_path):
                          get_input_size('kg', global_config['preprocess']) + \
                          get_input_size('pos', global_config['preprocess'])
 
-    model = MatchLSTMModified(network_input_size, global_config['model']['match_lstm_input_size'],
+    model = MatchLSTMModified(device, network_input_size, global_config['model']['match_lstm_input_size'],
                               hidden_size=global_config['model']['hidden_size'],
                               word_embedding=get_embeddings('word', global_config),
                               part_of_speech=get_embeddings('pos', global_config),
