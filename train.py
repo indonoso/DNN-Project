@@ -1,20 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'han'
+__author__ = 'han modified by @indonoso'
 
-import os
-import torch
-import logging
 import argparse
+import json
+import logging
+import os
+
+import torch
 import torch.optim as optim
+from tqdm import tqdm
+
 from machine_comprehension.dataset.squad_dataset import SquadDataset
 from machine_comprehension.models.loss import MyNLLLoss
-from machine_comprehension.utils.load_config import init_logging, read_config
 from machine_comprehension.utils.eval import eval_on_model
-from .utils import get_input_size, get_embeddings, load_embeddings
-from tqdm import tqdm
+from machine_comprehension.utils.load_config import init_logging, read_config
 from .model import MatchLSTMModified
+from .utils import get_input_size, get_embeddings
+
 logger = logging.getLogger(__name__)
 
 
@@ -76,7 +80,6 @@ def train(config_path):
             weight = torch.load(weight_path, map_location=lambda storage, loc: storage.cuda())
         model.load_state_dict(weight, strict=False)
 
-
     # training arguments
     logger.info('start training...')
     train_batch_size = global_config['train']['batch_size']
@@ -115,12 +118,15 @@ def train(config_path):
         logger.info("epoch=%d, ave_score_em=%.2f, ave_score_f1=%.2f, sum_loss=%.5f" %
                     (epoch, valid_score_em, valid_score_f1, valid_loss))
 
+        save_metrics(checkpoint_path=global_config['data']['checkpoint_path'], metrics={'train_loss': sum_loss,
+                                                                                        'validation_f1': valid_score_f1,
+                                                                                        'validation_em': valid_score_em,
+                                                                                        'epoch': epoch}, epoch=epoch)
         # save model when best avg score
         if valid_avg > best_avg:
             save_model(model,
                        epoch=epoch,
-                       model_weight_path=global_config['data']['model_path'],
-                       checkpoint_path=global_config['data']['checkpoint_path'])
+                       model_weight_path=global_config['data']['model_path'])
             logger.info("saving model weight on epoch=%d" % epoch)
             best_avg = valid_avg
 
@@ -175,7 +181,7 @@ def train_on_model(model, criterion, optimizer, batch_data, epoch, clip_grad_max
     return sum_loss
 
 
-def save_model(model, epoch, model_weight_path, checkpoint_path):
+def save_model(model, epoch, model_weight_path):
     """
     save model weight without embedding
     :param model:
@@ -187,10 +193,12 @@ def save_model(model, epoch, model_weight_path, checkpoint_path):
     # save model weight
     model_weight = model.state_dict()
 
-    torch.save(model_weight, model_weight_path)
+    torch.save(model_weight, f"{model_weight_path}-{epoch}")
 
-    with open(checkpoint_path, 'w') as checkpoint_f:
-        checkpoint_f.write('epoch=%d' % epoch)
+
+def save_metrics(metrics, epoch, checkpoint_path):
+    with open(f"{checkpoint_path}-{epoch}", 'w') as checkpoint_f:
+        json.dump(metrics, checkpoint_f)
 
 
 if __name__ == '__main__':
