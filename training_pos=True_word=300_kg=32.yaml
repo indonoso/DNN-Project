@@ -19,7 +19,7 @@ data:
 
 model:
   match_lstm_input_size: 100
-  hidden_size: 50
+  hidden_size: 30
 
 global:
   random_seed: 123
@@ -45,7 +45,7 @@ train:
 
   optimizer: 'adamax'  # adam, sgd, adamax, adadelta(default is adamax)
   learning_rate: 0.002  # only for sgd
-  clip_grad_norm: 5
+  clip_grad_norm: 10
 
 test:
   batch_size: 32
