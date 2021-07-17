@@ -12,7 +12,7 @@ from machine_comprehension.dataset.squad_dataset import SquadDataset
 from machine_comprehension.models.loss import MyNLLLoss
 from machine_comprehension.utils.load_config import init_logging, read_config
 from machine_comprehension.utils.eval import eval_on_model
-from .utils import get_input_size, get_embeddings_path, load_embeddings
+from .utils import get_input_size, get_embeddings, load_embeddings
 from tqdm import tqdm
 from .model import MatchLSTMModified
 logger = logging.getLogger(__name__)
@@ -45,9 +45,9 @@ def train(config_path):
 
     model = MatchLSTMModified(network_input_size, global_config['model']['match_lstm_input_size'],
                               hidden_size=global_config['model']['hidden_size'],
-                              word_embedding=load_embeddings(get_embeddings_path('word', global_config)),
-                              part_of_speech=load_embeddings(global_config['data']['processed']['pos_embeddings_path']),
-                              knowledge_graph=load_embeddings(get_embeddings_path('kg', global_config)))
+                              word_embedding=get_embeddings('word', global_config),
+                              part_of_speech=global_config['data']['processed']['pos_embeddings_path'],
+                              knowledge_graph=get_embeddings('kg', global_config))
     model = model.to(device)
     criterion = MyNLLLoss()
 

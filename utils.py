@@ -8,10 +8,13 @@ def get_input_size(kind, config):
     return network_input_size
 
 
-def get_embeddings_path(kind, config):
-    name = config['data']['processed'][f'{kind}_embeddings_path']
-    size = config['preprocess'][f'{kind}_embedding_size']
-    return f'{name}-{size}.pickle'
+def get_embeddings(kind, config):
+    if config[f'use_{kind}']:
+        name = config['data']['processed'][f'{kind}_embeddings_path']
+        size = config['preprocess'][f'{kind}_embedding_size']
+        return load_embeddings(f'{name}-{size}.pickle')
+    else:
+        return False
 
 
 def load_embeddings(path):
