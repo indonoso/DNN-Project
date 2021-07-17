@@ -46,7 +46,7 @@ def train(config_path):
     model = MatchLSTMModified(network_input_size, global_config['model']['match_lstm_input_size'],
                               hidden_size=global_config['model']['hidden_size'],
                               word_embedding=get_embeddings('word', global_config),
-                              part_of_speech=global_config['data']['processed']['pos_embeddings_path'],
+                              part_of_speech=get_embeddings('pos', global_config),
                               knowledge_graph=get_embeddings('kg', global_config))
     model = model.to(device)
     criterion = MyNLLLoss()

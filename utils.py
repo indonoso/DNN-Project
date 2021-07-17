@@ -9,10 +9,12 @@ def get_input_size(kind, config):
 
 
 def get_embeddings(kind, config):
-    if config[f'use_{kind}']:
+    if kind == 'word' or (kind == 'kg' and config['preprocess'][f'use_{kind}']):
         name = config['data']['processed'][f'{kind}_embeddings_path']
         size = config['preprocess'][f'{kind}_embedding_size']
         return load_embeddings(f'{name}-{size}.pickle')
+    elif kind == 'pos' and config['preprocess'][f'use_{kind}']:
+        return load_embeddings(config['data']['processed'][f'{kind}_embeddings_path'])
     else:
         return False
 
