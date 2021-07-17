@@ -94,6 +94,8 @@ def train(config_path):
     best_avg = 0.
     model = model.to(device)
     # every epoch
+    apply_clip = True
+    last_loss = -1
     for epoch in range(global_config['train']['epoch']):
         # train
         model.train()  # set training = True, make sure right dropout
@@ -103,8 +105,10 @@ def train(config_path):
                                   batch_data=batch_train_data,
                                   epoch=epoch,
                                   clip_grad_max=clip_grad_max,
-                                  device=device)
+                                  device=device, apply_clip=apply_clip)
         logger.info('epoch=%d, sum_loss=%.5f' % (epoch, sum_loss))
+        apply_clip = not(last_loss == -1 or (sum_loss - last_loss)/sum_loss < 0.15)
+        last_loss = sum_loss
 
         # evaluate
         with torch.no_grad():
@@ -121,7 +125,8 @@ def train(config_path):
         save_metrics(checkpoint_path=global_config['data']['checkpoint_path'], metrics={'train_loss': sum_loss,
                                                                                         'validation_f1': valid_score_f1,
                                                                                         'validation_em': valid_score_em,
-                                                                                        'epoch': epoch}, epoch=epoch)
+                                                                                        'epoch': epoch,
+                                                                                        'apply_clip': apply_clip}, epoch=epoch)
         # save model when best avg score
         if valid_avg > best_avg:
             save_model(model,
@@ -133,7 +138,7 @@ def train(config_path):
     logger.info('finished.')
 
 
-def train_on_model(model, criterion, optimizer, batch_data, epoch, clip_grad_max, device):
+def train_on_model(model, criterion, optimizer, batch_data, epoch, clip_grad_max, device, apply_clip):
     """
     train on every batch
     :param enable_char:
@@ -163,8 +168,8 @@ def train_on_model(model, criterion, optimizer, batch_data, epoch, clip_grad_max
         # get loss
         loss = criterion.forward(ans_range_prop, bat_answer_range)
         loss.backward()
-
-        torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad_max)  # fix gradient explosion
+        if apply_clip:
+            torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad_max)  # fix gradient explosion
         optimizer.step()  # update parameters
 
         # logging
