@@ -89,6 +89,7 @@ def train(config_path):
     clip_grad_max = global_config['train']['clip_grad_norm']
 
     best_avg = 0.
+    model = model.to(device)
     # every epoch
     for epoch in range(global_config['train']['epoch']):
         # train

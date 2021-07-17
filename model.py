@@ -3,7 +3,8 @@ from machine_comprehension.models import MatchLSTM
 
 
 class MatchLSTMModified(torch.nn.Module):
-    def __init__(self, device, network_input_size, match_lstm_input_size, word_embedding=False, part_of_speech=False, knowledge_graph=False, hidden_size=150):
+    def __init__(self, device, network_input_size, match_lstm_input_size, word_embedding=False, part_of_speech=False,
+                 knowledge_graph=False, hidden_size=150):
         super().__init__()
         self.embedding = Embedding(device, word_embedding=word_embedding,
                                    part_of_speech=part_of_speech,
@@ -32,13 +33,16 @@ class Embedding(torch.nn.Module):
 
         if isinstance(word_embedding, torch.Tensor):
             word_embedding.to(device)
-            self.embedding['word'] = torch.nn.Embedding.from_pretrained(word_embedding, padding_idx=0)
+            self.embedding['word'] = torch.nn.Embedding.from_pretrained(word_embedding)
+            self.embedding['word'].to(device)
         if isinstance(part_of_speech, torch.Tensor):
             part_of_speech.to(device)
-            self.embedding['pos'] = torch.nn.Embedding.from_pretrained(part_of_speech, padding_idx=0)
+            self.embedding['pos'] = torch.nn.Embedding.from_pretrained(part_of_speech)
+            self.embedding['pos'].to(device)
         if isinstance(knowledge_graph, torch.Tensor):
             knowledge_graph.to(device)
-            self.embedding['kg'] = torch.nn.Embedding.from_pretrained(knowledge_graph, padding_idx=0)
+            self.embedding['kg'] = torch.nn.Embedding.from_pretrained(knowledge_graph)
+            self.embedding['kg'].to(device)
 
     def forward(self, word_context, word_question, kg_context, kg_question, pos_context, pos_question):
         context = self.apply_embedding(word_context, pos_context, kg_context)
