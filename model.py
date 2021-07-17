@@ -1,6 +1,5 @@
 import torch
 from machine_comprehension.models import MatchLSTM
-from utils import load_embeddings
 
 
 class MatchLSTMModified(torch.nn.Module):
@@ -11,12 +10,11 @@ class MatchLSTMModified(torch.nn.Module):
         self.embedding = Embedding(word_embedding=word_embedding, part_of_speech=part_of_speech, knowledge_graph=knowledge_graph)
 
 
-    def forward(self, context, context_lengths, question, question_lengths):
+    def forward(self, word_context, word_question, kg_context, kg_question, pos_context, pos_question, context_lengths, question_lengths):
 
         # Este reduce hay que modificarlo seguro.
         # Hay que hacer padding y esas cosas para que se aplique la reducción a cada palabra, no a la frase completa.
-        context_vec = self.reduce_embedding(self.embedding(context))
-        question_vec = self.reduce_embedding(self.embedding(question))
+        context_vec, question_vec = self.embedding(word_context, word_question, kg_context, kg_question, pos_context, pos_question)
 
         return self.match_lstm(context_vec, context_lengths, question_vec, question_lengths)
 
@@ -24,27 +22,28 @@ class MatchLSTMModified(torch.nn.Module):
 class Embedding(torch.nn.Module):
     def __init__(self, word_embedding=False, part_of_speech=False, knowledge_graph=False):
         super().__init__()
-        self.embedding = []
+        self.embedding = {}
 
-        if word_embedding:
-           self.embedding.append(self.load_embeding_layer('word_embedding', word_embedding))
-        if part_of_speech:
-            self.embedding.append(self.load_embeding_layer('part_of_speech', part_of_speech))
-        if knowledge_graph:
-            self.embedding.append(self.load_embeding_layer('knwoledge_graph', knowledge_graph))
+        if isinstance(word_embedding, torch.Tensor):
+            self.embedding['word'] = torch.nn.Embedding.from_pretrained(word_embedding)
+        if isinstance(part_of_speech, torch.Tensor):
+            self.embedding['pos'] = torch.nn.Embedding.from_pretrained(part_of_speech)
+        if isinstance(knowledge_graph, torch.Tensor):
+            self.embedding['kg'] = torch.nn.Embedding.from_pretrained(knowledge_graph)
 
-    def load_embeding_layer(self, kind, size):
-        weights = load_embeddings(kind, size)
-        return torch.nn.Embedding.from_pretrained(weights)
+    def forward(self, word_context, word_question, kg_context, kg_question, pos_context, pos_question):
+        context = self.apply_embedding(word_context, pos_context, kg_context)
+        question = self.apply_embedding(word_question, pos_question, kg_question)
 
-    def forward(self, context, question):
-        # Si hay que hacer alguna modificación de los emebddings o algo aquí va
-        # Creo que mi versión está demasiado simplicada. context y question podrían ser unos dicts con los token ids para cada representación
-        # En ese caso habría que cambiar esto para que funcione. Se puede hacer con dicts
-
-        context_embedding = [emb(context) for emb in self.embedding]
-        question_embedding = [emb(question) for emb in self.embedding]
         # TODO check que el cat esté en la dimensión correcta
-        return torch.cat(context_embedding, dim=0), torch.cat(question_embedding, dim=0)
+        return torch.cat(context, dim=0), torch.cat(question, dim=0)
 
-
+    def apply_embedding(self, word, pos, kg):
+        applied_embeddings = []
+        if 'word' in self.embedding:
+            applied_embeddings.append(self.embedding['word'](word))
+        if 'pos' in self.embedding:
+            applied_embeddings.append(self.embedding['pos'](pos))
+        if 'kg' in self.embedding:
+            applied_embeddings.append(self.embedding['kg'](kg))
+        return applied_embeddings
