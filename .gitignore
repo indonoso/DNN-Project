@@ -3,3 +3,6 @@
 *.tsv
 *.json
 *.pdf
+*.ipynb_checkpoints/
+__pycache__/
+checkpoints/
