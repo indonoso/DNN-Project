@@ -193,11 +193,11 @@ def save_model(model, epoch, model_weight_path):
     # save model weight
     model_weight = model.state_dict()
 
-    torch.save(model_weight, f"{model_weight_path}-{epoch}")
+    torch.save(model_weight, f"{model_weight_path}-{epoch}.pt")
 
 
 def save_metrics(metrics, epoch, checkpoint_path):
-    with open(f"{checkpoint_path}-{epoch}", 'w') as checkpoint_f:
+    with open(f"{checkpoint_path}-{epoch}.json", 'w') as checkpoint_f:
         json.dump(metrics, checkpoint_f)
 
 
