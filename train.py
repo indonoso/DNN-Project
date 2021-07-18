@@ -134,7 +134,8 @@ def train(config_path):
                        model_weight_path=global_config['data']['model_path'])
             logger.info("saving model weight on epoch=%d" % epoch)
             best_avg = valid_avg
-
+    save_model(model, epoch=epoch,
+               model_weight_path=global_config['data']['model_path']
     logger.info('finished.')
 
 
