@@ -7,15 +7,15 @@ data:
   kg_embeddings_vec_path: drive/MyDrive/Colab Notebooks/DL/data/FB15K-237.2/entity_embeddings_64.tsv
   kg_patterns2id_path: drive/MyDrive/Colab Notebooks/DL/data/FB15K-237.2/kg_patterns2id.json
 
-  model_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/3-model-weight
-  checkpoint_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/3-metrics
+  model_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/5-model-weight
+  checkpoint_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/5-metrics
 
   processed:
     kg_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/kg_embeddings-64.pickle
     pos_embeddings_path: False
     word_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/word_embeddings-100.pickle
-    meta_path: drive/MyDrive/Colab Notebooks/DL/data/processed/2-meta.pickle
-    dataset_path: drive/MyDrive/Colab Notebooks/DL/data/processed/2-dataset.pickle
+    meta_path: drive/MyDrive/Colab Notebooks/DL/data/processed/5-meta.pickle
+    dataset_path: drive/MyDrive/Colab Notebooks/DL/data/processed/5-dataset.pickle
 
 model:
   match_lstm_input_size: 100
