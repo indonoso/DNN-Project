@@ -40,7 +40,7 @@ preprocess:
 train:
   batch_size: 32
   valid_batch_size: 32
-  epoch: 30
+  epoch: 20
   enable_cuda: True
 
   optimizer: 'adamax'  # adam, sgd, adamax, adadelta(default is adamax)
