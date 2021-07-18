@@ -11,9 +11,9 @@ data:
   checkpoint_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/4-metrics
 
   processed:
-    kg_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/kg_embeddings-32.pickle
+    kg_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/kg_embeddings-32
     pos_embeddings_path: False
-    word_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/word_embeddings-100.pickle
+    word_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/word_embeddings-100
     meta_path: drive/MyDrive/Colab Notebooks/DL/data/processed/4-meta.pickle
     dataset_path: drive/MyDrive/Colab Notebooks/DL/data/processed/4-dataset.pickle
 
