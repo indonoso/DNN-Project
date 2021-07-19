@@ -73,12 +73,7 @@ def train(config_path):
 
     # check if exist model weight
     weight_path = global_config['data']['model_path']
-    if os.path.exists(weight_path):
-        logger.info('loading existing weight...')
-        weight = torch.load(weight_path, map_location=lambda storage, loc: storage)
-        if enable_cuda:
-            weight = torch.load(weight_path, map_location=lambda storage, loc: storage.cuda())
-        model.load_state_dict(weight, strict=False)
+    load_weights_if_available(model, weight_path, enable_cuda)
 
     # training arguments
     logger.info('start training...')
@@ -205,6 +200,21 @@ def save_model(model, epoch, model_weight_path):
 def save_metrics(metrics, epoch, checkpoint_path):
     with open(f"{checkpoint_path}-{epoch}.json", 'w') as checkpoint_f:
         json.dump(metrics, checkpoint_f)
+
+
+def load_weights_if_available(model, model_weight_path, use_cuda):
+    folder = os.path.dirname(model_weight_path)
+    filename = os.path.basename(model_weight_path)
+    epochs = [int(p.split('-')[-1][:-3]) for p in os.listdir(folder) if p.startswith(filename)]
+    if len(epochs) > 0:
+        logger.info('loading existing weight...')
+        max_epoch = max(epochs)
+        weight = torch.load(f"{model_weight_path}-{max_epoch}.pt", map_location=lambda storage, loc: storage)
+        if use_cuda:
+            weight = torch.load(f"{model_weight_path}-{max_epoch}.pt", map_location=lambda storage, loc: storage.cuda())
+        model.load_state_dict(weight, strict=False)
+
+    return model
 
 
 if __name__ == '__main__':
