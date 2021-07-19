@@ -73,7 +73,7 @@ def train(config_path):
 
     # check if exist model weight
     weight_path = global_config['data']['model_path']
-    load_weights_if_available(model, weight_path, enable_cuda)
+    model, init_epoch = load_weights_if_available(model, weight_path, enable_cuda)
 
     # training arguments
     logger.info('start training...')
@@ -91,7 +91,7 @@ def train(config_path):
     # every epoch
     apply_clip = True
     last_loss = -1
-    for epoch in range(global_config['train']['epoch']):
+    for epoch in range(init_epoch + 1, global_config['train']['epoch']):
         # train
         model.train()  # set training = True, make sure right dropout
         sum_loss = train_on_model(model=model,
@@ -206,6 +206,7 @@ def load_weights_if_available(model, model_weight_path, use_cuda):
     folder = os.path.dirname(model_weight_path)
     filename = os.path.basename(model_weight_path)
     epochs = [int(p.split('-')[-1][:-3]) for p in os.listdir(folder) if p.startswith(filename)]
+    max_epoch = 0
     if len(epochs) > 0:
         logger.info('loading existing weight...')
         max_epoch = max(epochs)
@@ -214,7 +215,7 @@ def load_weights_if_available(model, model_weight_path, use_cuda):
             weight = torch.load(f"{model_weight_path}-{max_epoch}.pt", map_location=lambda storage, loc: storage.cuda())
         model.load_state_dict(weight, strict=False)
 
-    return model
+    return model, max_epoch
 
 
 if __name__ == '__main__':
