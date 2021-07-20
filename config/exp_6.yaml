@@ -31,10 +31,10 @@ preprocess:
   pos_embedding_size: 49
   ignore_max_len: 600 # in train data, context token len > ignore_max_len will be dropped
   use_char: False
-  use_pos: False
+  use_pos: True
   use_ent: False
   use_em: False
-  use_kg: True
+  use_kg: False
   use_em_lemma: False
 
 train:
