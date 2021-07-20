@@ -102,7 +102,7 @@ def train(config_path):
                                   clip_grad_max=clip_grad_max,
                                   device=device, apply_clip=apply_clip)
         logger.info('epoch=%d, sum_loss=%.5f' % (epoch, sum_loss))
-        apply_clip = not(last_loss == -1 or (sum_loss - last_loss)/sum_loss < 0.15)
+        # apply_clip = last_loss != -1 and (sum_loss - last_loss)/sum_loss < 0.15
         last_loss = sum_loss
 
         # evaluate
