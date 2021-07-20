@@ -7,8 +7,8 @@ data:
   kg_embeddings_vec_path: drive/MyDrive/Colab Notebooks/DL/data/FB15K-237.2/entity_embeddings_32.tsv
   kg_patterns2id_path: drive/MyDrive/Colab Notebooks/DL/data/FB15K-237.2/kg_patterns2id.json
 
-  model_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/4-model-weight
-  checkpoint_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/4-metrics
+  model_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/7-model-weight
+  checkpoint_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/7-metrics
 
   processed:
     kg_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/kg_embeddings
