@@ -1,0 +1,52 @@
+data:
+  dataset:
+    train_path: drive/MyDrive/Colab Notebooks/DL/data/SQuAD/train-v2.0.json
+    dev_path: drive/MyDrive/Colab Notebooks/DL/data/SQuAD/dev-v2.0.json
+  dataset_h5: null.txt
+  word_embedding_path: drive/MyDrive/Colab Notebooks/DL/data/GloVe/glove.6B.100d.txt
+  kg_embeddings_vec_path: drive/MyDrive/Colab Notebooks/DL/data/FB15K-237.2/entity_embeddings_32.tsv
+  kg_patterns2id_path: drive/MyDrive/Colab Notebooks/DL/data/FB15K-237.2/kg_patterns2id.json
+
+  model_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/8-model-weight
+  checkpoint_path: drive/MyDrive/Colab Notebooks/DL/data/checkpoint/8-metrics
+
+  processed:
+    kg_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/kg_embeddings
+    pos_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/pos_embeddings.pickle
+    word_embeddings_path: drive/MyDrive/Colab Notebooks/DL/data/processed/word_embeddings
+    meta_path: drive/MyDrive/Colab Notebooks/DL/data/processed/4-meta.pickle
+    dataset_path: drive/MyDrive/Colab Notebooks/DL/data/processed/4-dataset.pickle
+
+model:
+  match_lstm_input_size: 100
+  hidden_size: 100
+
+global:
+  random_seed: 123
+  num_data_workers: 2   # for data loader
+
+preprocess:
+  word_embedding_size: 100
+  kg_embedding_size: 32
+  pos_embedding_size: 49
+  ignore_max_len: 600 # in train data, context token len > ignore_max_len will be dropped
+  use_char: False
+  use_pos: True
+  use_ent: False
+  use_em: False
+  use_kg: True
+  use_em_lemma: False
+
+train:
+  batch_size: 32
+  valid_batch_size: 32
+  epoch: 20
+  enable_cuda: True
+
+  optimizer: 'adamax'  # adam, sgd, adamax, adadelta(default is adamax)
+  learning_rate: 0.002  # only for sgd
+  clip_grad_norm: 5
+
+test:
+  batch_size: 32
+  enable_cuda: True
