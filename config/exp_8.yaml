@@ -19,7 +19,7 @@ data:
 
 model:
   match_lstm_input_size: 100
-  hidden_size: 100
+  hidden_size: 150
 
 global:
   random_seed: 123
