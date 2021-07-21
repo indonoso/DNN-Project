@@ -123,14 +123,12 @@ def train(config_path):
                                                                                         'epoch': epoch,
                                                                                         'apply_clip': apply_clip}, epoch=epoch)
         # save model when best avg score
-        if valid_avg > best_avg:
-            save_model(model,
+
+        save_model(model,
                        epoch=epoch,
                        model_weight_path=global_config['data']['model_path'])
-            logger.info("saving model weight on epoch=%d" % epoch)
-            best_avg = valid_avg
-    save_model(model, epoch=epoch,
-               model_weight_path=global_config['data']['model_path'])
+        logger.info("saving model weight on epoch=%d" % epoch)
+
     logger.info('finished.')
 
 
